@@ -1,8 +1,8 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=ShadowVPN
+PKG_NAME:=shadowvpn
 PKG_VERSION:=0.1.6
-PKG_RELEASE=1
+PKG_RELEASE=2
 
 PKG_SOURCE_URL:=https://github.com/clowwindy/ShadowVPN/releases/download/$(PKG_VERSION)
 PKG_SOURCE:=shadowvpn-$(PKG_VERSION).tar.gz
@@ -20,7 +20,7 @@ PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/ShadowVPN
+define Package/shadowvpn
   SECTION:=net
   CATEGORY:=Network
   TITLE:=ShadowVPN
@@ -28,16 +28,16 @@ define Package/ShadowVPN
   URL:=https://shadowvpn.org
 endef
 
-define Package/ShadowVPN/description
+define Package/shadowvpn/description
 A fast, safe VPN based on libsodium
     with native interface protocol support
 endef
 
-define Package/ShadowVPN/install
+define Package/shadowvpn/install
 	$(INSTALL_DIR) $(1)/lib/netifd/proto
 	$(INSTALL_BIN) ./files/shadowvpn.sh $(1)/lib/netifd/proto
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/shadowvpn $(1)/usr/bin
 endef
 
-$(eval $(call BuildPackage,ShadowVPN))
+$(eval $(call BuildPackage,shadowvpn))

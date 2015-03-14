@@ -6,7 +6,7 @@
     init_proto "$@"
 }
 
-proto_shadowvpn_setup() {
+proto_svpn_setup() {
     local cfg="$1"
     local device="svpn-$cfg"
     local confdir="/var/etc/$device"
@@ -88,7 +88,7 @@ EOF
                       -c "$conffile"
 }
 
-proto_shadowvpn_teardown() {
+proto_svpn_teardown() {
     local cfg="$1"
     local device="svpn-$cfg"
 
@@ -99,7 +99,7 @@ proto_shadowvpn_teardown() {
     rm -rf "/var/etc/${device}"
 }
 
-proto_shadowvpn_init_config() {
+proto_svpn_init_config() {
     no_device=1
     available=1
 
@@ -115,5 +115,5 @@ proto_shadowvpn_init_config() {
 }
 
 [ -n "$INCLUDE_ONLY" ] || {
-    add_protocol shadowvpn
+    add_protocol svpn
 }
