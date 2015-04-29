@@ -50,6 +50,7 @@ mtu=${mtu:=1440}
 intf=$device
 up=$upscript
 down=$downscript
+pidfile=$confdir/shadowvpn.pid
 EOF
     chmod 600 "$conffile"
 
@@ -60,14 +61,14 @@ ifconfig $device $ipaddr netmask ${netmask:=255.255.255.0}
 ifconfig $device mtu \$mtu
 proto_init_update $device 1 1
 proto_set_keep 1
-proto_add_ipv4_address $ipaddr $netmask
+proto_add_ipv4_address $ipaddr ${netmask:=255.255.255.0}
 [ -n "$gateway" -a "$defaultroute" = 1 ] && \\
     proto_add_ipv4_route 0.0.0.0 0 $gateway
 proto_send_update $cfg
 [ -d "$upd" ] && {
     for script in $upd/*
     do
-        [ -x "\$script" ] && "\$script" $device $ipaddr $netmask $gateway
+        [ -x "\$script" ] && "\$script" $device $ipaddr $netmask $gateway $cfg
     done
 }
 EOF
@@ -77,7 +78,7 @@ EOF
 [ -d "$downd" ] && {
     for script in $downd/*
     do
-        [ -x "\$script" ] && "\$script" $device $ipaddr $netmask $gateway
+        [ -x "\$script" ] && "\$script" $device $ipaddr $netmask $gateway $cfg
     done
 }
 EOF
@@ -91,12 +92,14 @@ EOF
 proto_svpn_teardown() {
     local cfg="$1"
     local device="svpn-$cfg"
+    local confdir="/var/etc/$device"
 
     proto_init_update "$device" 0
+    kill `cat $confdir/shadowvpn.pid` >/dev/null 2>&1
     proto_kill_command "$1"
     proto_send_update "$cfg"
 
-    rm -rf "/var/etc/${device}"
+    rm -rf "$confdir"
 }
 
 proto_svpn_init_config() {
