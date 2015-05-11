@@ -41,7 +41,7 @@ proto_svpn_setup() {
     mkdir -p "$confdir"
 
     cat <<-EOF >$conffile
-server=$server
+server=$serv_addr
 port=$port
 password=$password
 mode=client
